@@ -14,12 +14,18 @@ The script exports the data into CSV files, which can be used to be manually upl
 
 1. Clone or download this repository.
 2. Install the required modules, if not already installed:
+
    `Install-Module -Name AeriesApi`
+
    `Install-Module -Name SecretManagement`
+
 3. Update the `config-template.ps1` file with the appropriate values for your environment, and save it as `config.ps1`. You can also set the `$DbYear` variable to `(Get-Date).Year` if you want to use the current year.
 4. Store your Aeries API key in the PowerShell SecretManagement vault:
+
    `$ApiKey = 'APIKeyFromAeriesHere' | ConvertTo-SecureString -AsPlainText -Force`
+
    `Set-Secret -Vault 'MyVault' -Name 'AeriesCleverSummerExtractApiKey' -Secret $ApiKey`
+
    Replace `'MyVault'` with the name of your vault, and `'APIKeyFromAeriesHere'` with your Aeries API key.
    This step ensures that your credentials are stored securely in the vault under your users credentials instead of being stored in plain text in the script file.
 
