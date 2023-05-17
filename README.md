@@ -2,7 +2,7 @@
 
 This PowerShell script is intended to supplement regular school year data synced from the Aeries Student Information System with summer school data for Clever, a rostering and Single Sign-On (SSO) solution for schools. The problem being solved is the decision of whether to pause your Clever sync and have your spring students and teachers lose access to Clever over the summer, or to let the Clever sync run through the summer which means that data from the spring term will be lost. This script let's you have the best of both worlds by supplementing your paused spring data so it can persist throughout the summer alongside your summer school data from Aeries.
 
-The script exports the data into CSV files, which can be used to be manually uploaded into Clever as an interim solution while the regular school year data is paused for summer. Clever currently requires manual uploads for custom data, but has said an automated process may be introduced in the future.
+The script exports the data into CSV files, which can be used to be manually uploaded into Clever as an interim solution while the regular school year data is paused for summer. The files we will be uploading are the sections of the summer school, the enrollment data, and only new teachers and new students who are not already within Clever. If you import teachers/students who already exist in Clever, it may result in some issues, according to Clever support. To achieve this you must browse to the data browser in your clever instance and download the teacher and student data from Clever and reference them in the config file. Clever currently requires manual uploads for custom data, but has said an automated process may be introduced in the future.
 
 ## Prerequisites
 
