@@ -25,30 +25,6 @@ $Courses = Get-AeriesCourseInformation
 $CourseHT = @{}
 $Courses | ForEach-Object {$CourseHT.Add($_.ID, $_)}
 
-# Format school data for Clever
-$Schools = $SummerSchool | ForEach-Object {
-    [pscustomobject]@{
-        # REQUIRED PROPERTIES
-        School_id = $_.SchoolCode
-        School_name = $_.Name
-        School_number = $_.SchoolCode
-        # OPTIONAL PROPERTIES
-        State_id = $_.StateSchoolID
-        Low_grade = $_.LowGradeLevel
-        High_grade = $_.HighGradeLevel
-        Principal = $_.PrincipalName
-        Principal_email = $_.PrincipalEmailAddress
-        School_address = $_.Address
-        School_city = $_.AddressCity
-        School_state = $_.AddressState
-        School_zip = $_.AddressZipCode
-        School_phone = $_.PhoneNumber
-        #ext.* Additional data sent over in extension field.
-    }
-}
-# Export School Data to CSV
-$schools | export-csv -path $ExportDirectory\Schools.csv -NoTypeInformation
-
 # Format student data for Clever
 $students = $SummerStudents | ForEach-Object {
     [pscustomobject]@{
