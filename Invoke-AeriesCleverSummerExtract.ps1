@@ -1,4 +1,4 @@
-#Requires -Modules AeriesApi, SecretManagement
+#Requires -Modules AeriesApi, Microsoft.PowerShell.SecretManagement
 
 # Import Config
 . .\config.ps1
@@ -10,6 +10,21 @@ if (-not (Test-Path -Path $ExportDirectory)) {
     New-Item -ItemType Directory -Path $ExportDirectory
 }
 
+# Start Logging using Transcript
+$LogPath = Join-Path -Path $ExportDirectory -ChildPath "log-$Timestamp.txt"
+start-transcript -Path $LogPath -Append
+
+# Create Hash Table for Clever Teachers
+$CleverTeacherHT = @{}
+$CleverTeachers | ForEach-Object {$CleverTeacherHT.Add($_.teacher_sis_id, $_)}
+Write-Host "Existing Clever Teachers: $($CleverTeacherHT.Count)"
+
+# Create Hash Table for Clever Students
+$CleverStudentHT = @{}
+$CleverStudents | ForEach-Object {$CleverStudentHT.Add($_.student_sis_id, $_)}
+Write-Host "Existing Clever Students: $($CleverStudentHT.Count)"
+
+
 # Initialize Aeries API
 Initialize-AeriesApi -URL $AeriesUrl -Certificate ($AeriesApiKey | ConvertFrom-SecureString -AsPlainText) -DatabaseYear $DbYear
 
@@ -19,6 +34,10 @@ $SummerStudents = Get-AeriesStudent -SchoolCode $SummerSchool.SchoolCode
 $SummerTeachers = Get-AeriesTeacher -SchoolCode $SummerSchool.SchoolCode
 $SummerSections = Get-AeriesSection -SchoolCode $SummerSchool.SchoolCode
 $SummerRosters = $SummerSections | ForEach-Object {Get-AeriesSectionRoster -SchoolCode $SummerSchool.SchoolCode -SectionNumber $_.SectionNumber}
+Write-Host "Summer School Students: $($SummerStudents.Count)"
+Write-Host "Summer School Teachers: $($SummerTeachers.Count)"
+Write-Host "Summer School Sections: $($SummerSections.Count)"
+Write-Host "Summer School Rosters: $($SummerRosters.Count)"
 
 # Create HT for Courses by course ID
 $Courses = Get-AeriesCourseInformation
@@ -64,8 +83,17 @@ $students = $SummerStudents | ForEach-Object {
         #ext.* Additional data sent over in extension field.
     }
 }
+
+# Check if student is already in Clever, if not add to $NewStudents
+$NewStudents = @()
+foreach ($student in $students) {
+    if (-not $CleverStudentHT.ContainsKey($student.Student_id.ToString())) {
+        $NewStudents += $student
+    }
+}
+Write-Host "New Students: $($NewStudents.Count)"
 # Export Student Data to CSV
-$Students | export-csv -path $ExportDirectory\Students.csv -NoTypeInformation
+$NewStudents | export-csv -path $ExportDirectory\Students.csv -NoTypeInformation
 
 # Format teacher data for Clever
 $teachers = $SummerTeachers | ForEach-Object {
@@ -83,8 +111,16 @@ $teachers = $SummerTeachers | ForEach-Object {
         #ext.* Additional data sent over in extension field.
     }
 }
+# Check if teacher is already in Clever, if not add to $NewTeachers
+$NewTeachers = @()
+foreach ($teacher in $teachers) {
+    if (-not $CleverTeacherHT.ContainsKey($teacher.Teacher_id.ToString())) {
+        $NewTeachers += $teacher
+    }
+}
+Write-Host "New Teachers: $($NewTeachers.Count)"
 # Export Teacher Data to CSV
-$Teachers | export-csv -path $ExportDirectory\Teachers.csv -NoTypeInformation
+$NewTeachers | export-csv -path $ExportDirectory\Teachers.csv -NoTypeInformation
 
 # Format section data for Clever
 $Sections = $SummerSections | ForEach-Object {
