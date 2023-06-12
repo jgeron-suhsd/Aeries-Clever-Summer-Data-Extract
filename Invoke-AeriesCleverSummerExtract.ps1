@@ -164,3 +164,5 @@ $enrollments = $SummerRosters | ForEach-Object {
 }
 # Export Enrollment Data to CSV
 $Enrollments | export-csv -path $ExportDirectory\Enrollments.csv -NoTypeInformation
+
+Stop-Transcript
