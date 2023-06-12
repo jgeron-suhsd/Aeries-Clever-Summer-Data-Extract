@@ -145,9 +145,9 @@ $Sections = $SummerSections | ForEach-Object {
         Course_description = $CourseHT[$_.CourseID].ContentDescription
         Period = $_.Period
         #Subject = $_ #May need to cross reference elsewhere
-        #Term_name = $_.Semester # ??? Maybe? Maybe we pull it from the school?
-        #Term_start = $_.Same as above?
-        #Term_end = $_.Same as above?
+        Term_name = $TermName #$_.Semester # ??? Maybe? Maybe we pull it from the school?
+        Term_start = $TermStart
+        Term_end = $TermEnd
         #ext.* Additional data sent over in extension field.
     }
 }

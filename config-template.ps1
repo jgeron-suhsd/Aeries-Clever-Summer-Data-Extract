@@ -17,3 +17,11 @@ $ AeriesApiKey = get-secret -Name 'AeriesCleverSummerExtractApiKey'
 # To store the cert string in your vault using PowerShell SecretManagement, use the following command:
 # $ApiKey = 'APIKeyFromAeriesHere' | ConvertTo-SecureString -AsPlainText -Force
 # Set-Secret -Vault 'MyVault' -Name 'AeriesCleverSummerExtract' -Secret $ApiKey
+
+# TERM DATA
+# Hardcoding this into the config, as this is needed and need a last minute fix.
+# Our district only has 1 term for summer school, so should be straight forward.
+# If a district has multiple terms, would need to associate the correct term with each section in the main script.
+$TermName = 'Summer' # Run Get-AeriesSchoolTerms -SchoolCode $SummerSchool.SchoolCode to get the correct term name
+$TermStart = '06-13-2023' # Should be in MM-DD-YYYY format.
+$TermEnd = '07-13-2023' # Should be in MM-DD-YYYY format.
