@@ -1,7 +1,9 @@
 #Requires -Modules AeriesApi, Microsoft.PowerShell.SecretManagement
 
-# Import Config
-. .\config.ps1
+# paramaterize script to take location of config file, otherwise, we'll assume it's in the same directory
+param (
+    [string]$ConfigPath = '.\config.ps1'
+)
 
 # Create Export Directory
 $Timestamp = Get-Date -Format 'yyyy-MM-dd_HH-mm-ss'
